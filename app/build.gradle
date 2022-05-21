@@ -1,0 +1,41 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.javalin:javalin:4.3.0' // base server engine
+    implementation 'org.apache.velocity:velocity-engine-core:2.3' // html template engine
+    implementation 'ch.qos.logback:logback-classic:1.2.10' // logging implementation for slf4j
+    implementation 'org.snakeyaml:snakeyaml-engine:2.3' // basic yaml support (TODO remove?)
+    implementation 'org.yaml:snakeyaml:1.30' // typed yaml support
+    implementation 'com.google.code.gson:gson:2.9.0' // json support
+    implementation 'com.unboundid:unboundid-ldapsdk:6.0.3' // ldap client for authentication
+    implementation 'com.eatthepath:java-otp:0.3.1' // totp implementation
+    implementation 'info.picocli:picocli:4.6.3' // cli options parser
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.1'
+    testImplementation 'io.javalin:javalin-testtools:4.3.0'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.32.0'
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
+    // lombok stuff
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+application {
+    mainClass = 'com.github.lbarnkow.minchir.App'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+
+    jvmArgs "-agentlib:native-image-agent=access-filter-file=native-image/agent-config/access-filter.json,config-output-dir=native-image/config-classpath/META-INF/native-image"
+}

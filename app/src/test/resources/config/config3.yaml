@@ -1,0 +1,13 @@
+server:
+  assetsPath: 'config3'
+
+csrf:
+  totpKey: notnull
+  hmacKey: notnull
+
+hydra:
+  timeoutMilliseconds: 5001
+
+ldap:
+  bindPassword: password
+  userAttributeMail: email

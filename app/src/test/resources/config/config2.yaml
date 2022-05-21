@@ -1,0 +1,5 @@
+server:
+  assetsPath: 'config2'
+
+server:
+  port: 18080

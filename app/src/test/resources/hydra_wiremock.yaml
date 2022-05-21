@@ -1,0 +1,347 @@
+#########
+# LOGIN #
+#########
+
+# GETting the login challenge from ory hydra admin to test NON-skipped login
+- method: GET
+  url: /oauth2/auth/requests/login
+  queryParams:
+    login_challenge: non_skipped_login_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "non_skipped_login_flow",
+        "requested_scope": ["openid", "offline"],
+        "requested_access_token_audience": null,
+        "skip": false,
+        "subject": "",
+        "oidc_context": {},
+        "client": {
+          "client_id": "auth-code-client",
+          "client_name": "",
+          "redirect_uris": ["http://127.0.0.1:5555/callback"],
+          "grant_types": ["authorization_code", "refresh_token"],
+          "response_types": ["code", "id_token"],
+          "scope": "openid offline",
+          "audience": null,
+          "owner": "",
+          "policy_uri": "",
+          "allowed_cors_origins": null,
+          "tos_uri": "",
+          "client_uri": "",
+          "logo_uri": "",
+          "contacts": null,
+          "client_secret_expires_at": 0,
+          "subject_type": "public",
+          "token_endpoint_auth_method": "client_secret_basic",
+          "userinfo_signed_response_alg": "none",
+          "created_at": "2020-07-08T12:31:47Z",
+          "updated_at": "2020-07-08T12:31:47Z"
+        },
+        "request_url": "http://127.0.0.1:4444/oauth2/auth?audience=&client_id=auth-code-client&max_age=0&nonce=hognfveoohhddoralbeygsjg&prompt=&redirect_uri=http%3A%2F%2F127.0.0.1%3A5555%2Fcallback&response_type=code&scope=openid+offline&state=imnweycejbfpyrmnahgqzcmm",
+        "session_id": "d3c98aa6-67ae-478b-bc30-f7887b58f630"
+      }
+
+# Sending the login ACCEPT request to ory hydra admin for NON-skipped login
+- method: PUT
+  url: /oauth2/auth/requests/login/accept
+  queryParams:
+    login_challenge: non_skipped_login_flow
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "subject": "ldaptest1",
+          "remember": true,
+          "remember_for": 604800
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/login_accepted"
+      }
+
+# Sending the login REJECT request to ory hydra admin for non-skipped login
+- method: PUT
+  url: /oauth2/auth/requests/login/reject
+  queryParams:
+    login_challenge: non_skipped_login_flow
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "error" : "access_denied",
+          "error_description" : "The resource owner denied the request"
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://ory_admin:4445/login_rejected"
+      }
+
+# GETting the login challenge from ory hydra admin to test skipped login
+- method: GET
+  url: /oauth2/auth/requests/login
+  queryParams:
+    login_challenge: skipped_login_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "skipped_login_flow",
+        "skip": true,
+        "subject": "skip_subject"
+      }
+
+# Sending the login ACCEPT request to ory hydra admin for skipped login
+- method: PUT
+  url: /oauth2/auth/requests/login/accept
+  queryParams:
+    login_challenge: skipped_login_flow
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "subject": "skip_subject",
+          "remember": true,
+          "remember_for": 604800
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://ory_admin:4445/login_accepted"
+      }
+
+
+###########
+# CONSENT #
+###########
+
+# GETting the consent challenge from ory hydra admin to test NON-skipped consent
+- method: GET
+  url: /oauth2/auth/requests/consent
+  queryParams:
+    consent_challenge: non_skipped_consent_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "non_skipped_consent_flow",
+        "requested_scope": ["openid", "offline", "profile"],
+        "requested_access_token_audience": [],
+        "skip": false,
+        "subject": "subject@consent.flow",
+        "oidc_context": {
+          "acr_values": [],
+          "display": "",
+          "id_token_hint_claims": {},
+          "login_hint": "",
+          "ui_locales": []
+        },
+        "client": {
+          "client_id": "auth-code-client",
+          "client_name": "",
+          "redirect_uris": ["http://127.0.0.1:5555/callback"],
+          "grant_types": ["authorization_code", "refresh_token"],
+          "response_types": ["code", "id_token"],
+          "scope": "openid offline",
+          "audience": null,
+          "owner": "",
+          "policy_uri": "",
+          "allowed_cors_origins": null,
+          "tos_uri": "",
+          "client_uri": "",
+          "logo_uri": "",
+          "contacts": null,
+          "client_secret_expires_at": 0,
+          "subject_type": "public",
+          "token_endpoint_auth_method": "client_secret_basic",
+          "userinfo_signed_response_alg": "none",
+          "created_at": "2020-07-08T12:31:47Z",
+          "updated_at": "2020-07-08T12:31:47Z"
+        },
+        "request_url": "http://127.0.0.1:4444/oauth2/auth?audience=&client_id=auth-code-client&max_age=0&nonce=hognfveoohhddoralbeygsjg&prompt=&redirect_uri=http%3A%2F%2F127.0.0.1%3A5555%2Fcallback&response_type=code&scope=openid+offline&state=imnweycejbfpyrmnahgqzcmm",
+        "login_challenge": "non_skipped_login_flow",
+        "login_session_id": "c829da46-2041-400c-b72d-08324f878d0a",
+        "acr": ""
+      }
+
+# Sending the consent ACCEPT request to ory hydra admin for NON-skipped consent
+- method: PUT
+  url: /oauth2/auth/requests/consent/accept
+  queryParams:
+    consent_challenge: non_skipped_consent_flow
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+        "grant_scope": ["openid", "offline", "profile"],
+        "grant_access_token_audience": [],
+        "remember": true,
+        "remember_for": 0
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/consent_accepted"
+      }
+
+# Sending the consent REJECT request to ory hydra admin for non-skipped consent
+- method: PUT
+  url: /oauth2/auth/requests/consent/reject
+  queryParams:
+    consent_challenge: non_skipped_consent_flow
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "error" : "access_denied",
+          "error_description" : "The resource owner denied the request"
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://ory_admin:4445/consent_rejected"
+      }
+
+# GETting the consent challenge from ory hydra admin to test skipped consent
+- method: GET
+  url: /oauth2/auth/requests/consent
+  queryParams:
+    consent_challenge: skipped_consent_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "skipped_consent_flow",
+        "requested_scope": ["openid", "offline_access"],
+        "requested_access_token_audience": ["https://my-audience.com"],
+        "skip": true
+      }
+
+# Sending the consent ACCEPT request to ory hydra admin for skipped consent
+- method: PUT
+  url: /oauth2/auth/requests/consent/accept
+  queryParams:
+    consent_challenge: skipped_consent_flow
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+        "grant_scope": ["openid", "offline_access"],
+        "grant_access_token_audience": ["https://my-audience.com"],
+        "remember": true,
+        "remember_for": 0
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://ory_admin:4445/consent_accepted"
+      }
+
+
+##########
+# LOGOUT #
+##########
+
+# GETting the logout challenge from ory hydra admin to test NON-skipped logout
+- method: GET
+  url: /oauth2/auth/requests/logout
+  queryParams:
+    logout_challenge: non_skipped_logout_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "subject": "subject@consent.flow",
+        "sid": "c829da46-2041-400c-b72d-08324f878d0a",
+        "request_url": "https://hydra/oauth2/sessions/logout?id_token_hint=...",
+        "rp_initiated": true
+      }
+
+# Sending the logout ACCEPT request to ory hydra admin for NON-skipped logout
+- method: PUT
+  url: /oauth2/auth/requests/logout/accept
+  queryParams:
+    logout_challenge: non_skipped_logout_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/logout_accepted"
+      }
+
+# Sending the logout REJECT request to ory hydra admin for non-skipped logout
+- method: PUT
+  url: /oauth2/auth/requests/logout/reject
+  queryParams:
+    logout_challenge: non_skipped_logout_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+
+# GETting the logout challenge from ory hydra admin to test skipped logout
+- method: GET
+  url: /oauth2/auth/requests/logout
+  queryParams:
+    logout_challenge: skipped_logout_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "subject": "subject@consent.flow",
+        "sid": "c829da46-2041-400c-b72d-08324f878d0a",
+        "request_url": "https://hydra/oauth2/sessions/logout?id_token_hint=...",
+        "rp_initiated": false
+      }
+
+# Sending the logout ACCEPT request to ory hydra admin for skipped logout
+- method: PUT
+  url: /oauth2/auth/requests/logout/accept
+  queryParams:
+    logout_challenge: skipped_logout_flow
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://ory_admin:4445/logout_accepted"
+      }

@@ -1,0 +1,13 @@
+# File must be encoded in UTF-8!
+global:
+  glob1: "translations1"
+  glob2: "translations1"
+
+en:
+  one: "translations1"
+  two: "translations1"
+  three: "translations1"
+
+de:
+  eins: "translations1"
+  zwei: "translations1"

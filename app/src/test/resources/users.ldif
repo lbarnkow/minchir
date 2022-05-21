@@ -1,0 +1,52 @@
+version: 1
+dn: dc=myorg,dc=com
+objectClass: domain
+objectClass: top
+dc: myorg
+
+dn: ou=Users,dc=myorg,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: Users
+
+dn: ou=Groups,dc=myorg,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: Groups
+
+dn: cn=binduser,ou=Users,dc=myorg,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: bind_user
+sn: Ldap
+uid: bind_user
+userPassword: s3cr3t
+
+dn: cn=ldaptest1,ou=Users,dc=myorg,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: ldaptest1
+givenName: John
+sn: Doe
+uid: ldaptest1
+mail: john.doe@myorg.com
+userPassword: 12345
+memberOf: cn=Admins,ou=Groups,dc=myorg,dc=com
+memberOf: cn=Devs,ou=Groups,dc=myorg,dc=com
+
+dn: cn=ldaptest2,ou=Users,dc=myorg,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: ldaptest2
+givenName: Jane
+sn: Doe
+uid: ldaptest2
+mail: jane.doe@myorg.com
+userPassword: 67890
+memberOf: cn=Friends,ou=Groups,dc=myorg,dc=com
