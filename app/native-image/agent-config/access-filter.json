@@ -1,0 +1,8 @@
+{
+  "rules": [
+    {"excludeClasses": "com.github.lbarnkow.minchir.test.**"},
+    {"excludeClasses": "org.gradle.**"},
+    {"excludeClasses": "org.junit.**"},
+    {"excludeClasses": "org.apiguardian.**"}
+  ]
+}

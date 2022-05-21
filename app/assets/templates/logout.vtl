@@ -1,0 +1,51 @@
+<!doctype html>
+<!-- LOGOUT -->
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="css/bootstrap-5.1.3.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+
+        <title>${site_title} - ${logout_title}</title>
+    </head>
+    <body>
+        <div class="mask" style="background: url(img/background.jpg) no-repeat center center fixed; background-size: cover;">
+            <div id="background" class="d-flex align-content-center flex-wrap p-5" style="height: 100vh; min-height: 1000px; background-color: rgba(0, 0, 0, 0.8);">
+
+                <div id="dialog" class="container p-4 bg-white rounded-3" style="min-width: 300px; max-width: 600px;">
+                    <form method="post" action="logout">
+                        <input type="hidden" name="csrf_token" value="${csrf_token}" />
+                        <input type="hidden" name="logout_challenge" value="${logout_challenge}" />
+                        <h1 class="text-center">${site_title} - ${logout_title}</h1>
+                        <hr />
+                        <div class="alert alert-info" role="info">
+                            <h3 class="text-center">
+                                ${logout_account_label}: <b>${subject}</b>
+                            </h3>
+                            <h5 class="text-center">
+                                ${logout_description}
+                            </h5>
+                            <div class="text-center">
+                                ${logout_explanation}
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="px-2 row justify-content-center">
+                            <button name="logout" value="${logout_submit}" type="submit" class="col btn btn-danger m-1 order-2"><b>${logout_submit}</b></button>
+                            <button name="cancel" value="${logout_cancel}" type="submit" class="col btn btn-secondary m-1 order-1">${logout_cancel}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/bootstrap-5.1.3.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="js/resize.js"></script>
+    </body>
+</html>

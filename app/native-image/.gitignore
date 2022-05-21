@@ -1,0 +1,5 @@
+# GraalVM / native-image stuff
+/*
+!.gitignore
+!README.md
+!agent-config/

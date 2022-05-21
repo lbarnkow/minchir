@@ -1,0 +1,11 @@
+# File must be encoded in UTF-8!
+global:
+  glob2: "translations2"
+
+en:
+  two: "translations2"
+  four: "translations2"
+
+fr:
+  un: "translations2"
+  deux: "translations2"
