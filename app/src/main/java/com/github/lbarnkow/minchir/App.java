@@ -13,14 +13,17 @@ import com.github.lbarnkow.minchir.handlers.request.ConsentHandler;
 import com.github.lbarnkow.minchir.handlers.request.LoginHandler;
 import com.github.lbarnkow.minchir.handlers.request.LogoutHandler;
 import com.github.lbarnkow.minchir.hydra.impl.OryHydraAdminApiImpl;
+import com.github.lbarnkow.minchir.util.SystemExitException;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.rendering.template.JavalinVelocity;
 import picocli.CommandLine;
+import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParameterException;
 
+@Command(name = "minchir")
 public class App {
   @Option( //
       names = {"--help"}, //
@@ -66,12 +69,20 @@ public class App {
   )
   private List<String> scopesFiles;
 
-  private static void help(CommandLine cli, int status) {
+  private static void help(CommandLine cli, int status) throws SystemExitException {
     cli.usage(System.out);
-    System.exit(status);
+    throw new SystemExitException(status);
   }
 
   public static void main(String... args) throws Exception {
+    try {
+      setupCli(args);
+    } catch (SystemExitException e) {
+      System.exit(e.getStatus());
+    }
+  }
+
+  public static void setupCli(String... args) throws Exception {
     var app = new App();
     var cli = new CommandLine(app);
 

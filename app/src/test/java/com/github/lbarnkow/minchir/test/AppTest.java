@@ -1,20 +1,18 @@
 package com.github.lbarnkow.minchir.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
+import com.github.lbarnkow.minchir.App;
+import com.github.lbarnkow.minchir.util.SystemExitException;
+
 class AppTest {
 
-  // @Test
-  // void testReflections() throws InterruptedException, IOException {
-  // try (Javalin app = new App().javalinApp(Map.of())) {
-  // app.start(0);
-  // Thread.sleep(1000);
-  //
-  // URL oracle = new URL("http://localhost:" + app.port() + "/login");
-  // URLConnection yc = oracle.openConnection();
-  // try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
-  // String inputLine;
-  // while ((inputLine = in.readLine()) != null)
-  // System.out.println(inputLine);
-  // }
-  // }
-  // }
+  @Test
+  void testPicoCliHelp() {
+    var e = assertThrows(SystemExitException.class, () -> App.setupCli());
+    assertThat(e.getStatus()).isEqualTo(1);
+  }
 }

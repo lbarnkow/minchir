@@ -23,6 +23,7 @@ dependencies {
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.32.0'
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
+
     // lombok stuff
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
