@@ -51,6 +51,6 @@ $ native-image \
         --static \
         --libc=glibc \
         --class-path './config-classpath/:../build/install/app/lib/*' \
-        com.github.lbarnkow.minchir.test.App \
+        com.github.lbarnkow.minchir.App \
         app
 ```

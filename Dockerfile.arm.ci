@@ -1,0 +1,30 @@
+# Dockerfile.ci
+#
+# This Dockerfile is only used by the CI workflows to produce an arm64/aarch64
+# linux native-image. As Github currently has no native support for arm64 and
+# GraalVM native-image can't cross-compile, the work-around is to combinde qemu
+# and Docker Buildx to emulate a linux/arm64 environment.
+###############################################################################
+FROM ghcr.io/graalvm/native-image:22 AS builder
+
+COPY . .
+
+RUN \
+    cd app/native-image && \
+    native-image \
+        --allow-incomplete-classpath \
+        --no-fallback \
+        --static \
+        --libc=glibc \
+        --class-path './config-classpath/:../build/install/app/lib/*' \
+        com.github.lbarnkow.minchir.App \
+        minchir-linux-arm64
+
+RUN \
+    cd app/native-image && \
+    ./minchir-linux-arm64 --help
+
+###############################################################################
+FROM scratch AS release
+
+COPY --from=builder /app/app/native-image/minchir-linux-arm64 /

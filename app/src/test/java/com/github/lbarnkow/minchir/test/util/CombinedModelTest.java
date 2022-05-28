@@ -1,6 +1,7 @@
 package com.github.lbarnkow.minchir.test.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -8,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,22 +57,22 @@ public class CombinedModelTest {
 
   @Test
   public void testPut() {
-    Assertions.assertThrows(UnsupportedOperationException.class, () -> combined.put("a", "b"));
+    assertThrows(UnsupportedOperationException.class, () -> combined.put("a", "b"));
   }
 
   @Test
   public void testPutAll() {
-    Assertions.assertThrows(UnsupportedOperationException.class, () -> combined.putAll(Map.of("a", "b", "x", "y")));
+    assertThrows(UnsupportedOperationException.class, () -> combined.putAll(Map.of("a", "b", "x", "y")));
   }
 
   @Test
   public void testRemove() {
-    Assertions.assertThrows(UnsupportedOperationException.class, () -> combined.remove("key-1"));
+    assertThrows(UnsupportedOperationException.class, () -> combined.remove("key-1"));
   }
 
   @Test
   public void testClear() {
-    Assertions.assertThrows(UnsupportedOperationException.class, () -> combined.clear());
+    assertThrows(UnsupportedOperationException.class, () -> combined.clear());
   }
 
   @Test
