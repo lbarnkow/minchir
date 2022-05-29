@@ -22,20 +22,20 @@ jobs:
           cd app
           ../gradlew --no-daemon test installDist distZip
 
-      - if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         with:
           name: gradle-install
           path: app/build/install/app/
 
-      - if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         with:
           name: native-image-configs
           path: app/native-image
 
-      - if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         with:
           name: gradle-dist
           path: app/build/distributions/app.zip
@@ -46,6 +46,16 @@ jobs:
     needs: java
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: gradle-install
+          path: gradle-install
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-image-configs
+          path: native-image-configs
+
       - uses: graalvm/setup-graalvm@v1
         with:
           version: 'latest'
@@ -54,13 +64,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          java -version
-          cd app
-          ../gradlew --no-daemon test installDist distZip
-
-      - run: |
           cd native-image-configs
-          $GRAALVM_HOME/bin/../lib/svm/bin/native-image \
+          native-image \
               --allow-incomplete-classpath \
               --no-fallback \
               --static \
@@ -68,6 +73,7 @@ jobs:
               --class-path './config-classpath/:../gradle-install/lib/*' \
               com.github.lbarnkow.minchir.App \
               minchir-linux-amd64
+          ./minchir-linux-amd64 --help
 
       - uses: actions/upload-artifact@v3
         with:
@@ -80,6 +86,8 @@ jobs:
     needs: java
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           name: gradle-install
@@ -95,6 +103,7 @@ jobs:
       - uses: docker/build-push-action@v3
         with:
           context: .
+          file: ./Dockerfile.arm.ci
           platforms: linux/arm64
           load: true
           push: false
