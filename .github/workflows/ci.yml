@@ -31,6 +31,12 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         with:
+          name: assets
+          path: app/assets/
+
+      - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        with:
           name: native-image-configs
           path: app/native-image
 
@@ -124,7 +130,47 @@ jobs:
   # publish release
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [native-image-linux-amd64, native-image-linux-arm64]
+    needs: [java, native-image-linux-amd64, native-image-linux-arm64]
     runs-on: ubuntu-latest
     steps:
-      - run: uname --all # TODO
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-image-linux-amd64
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-image-linux-arm64
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: gradle-install
+          path: gradle-install
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: assets
+          path: assets
+
+      - run: |
+          set -x
+          cp -a assets gradle-install/
+          zip -r assets.zip assets/
+          cd gradle-install/bin
+          mv app minchir-$GITHUB_REF_NAME
+          mv app.bat minchir-$GITHUB_REF_NAME.bar
+          cd ../..
+          mv gradle-install minchir-$GITHUB_REF_NAME
+          zip -r minchir-$GITHUB_REF_NAME.zip minchir-$GITHUB_REF_NAME/
+          ls -lah
+          tree
+
+      - uses: softprops/action-gh-release@v0.1.14
+        with:
+          fail_on_unmatched_files: true
+          prerelease: ${{ contains(github.ref, '-') }}
+          generate_release_notes: true
+          files: |
+            minchir-${{ github.ref_name }}.zip
+            assets.zip
+            minchir-linux-arm64
+            minchir-linux-amd64
