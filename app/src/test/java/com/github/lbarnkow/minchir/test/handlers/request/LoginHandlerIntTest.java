@@ -41,6 +41,8 @@ public class LoginHandlerIntTest {
     settings = DefaultTestEnvironmentVariables.build2(wmInfo.getHttpBaseUrl(), ldap.getListenPort());
   }
 
+  // TODO: add test to cover gzip and brotli encoding/compression
+
   @Test
   void test_successful_non_skipped_login() throws Exception {
     try (var app = new App().javalinApp(settings)) {
