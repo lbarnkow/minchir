@@ -127,10 +127,64 @@ jobs:
           name: native-image-linux-arm64
           path: output/minchir-linux-arm64
 
+  # build and push docker images
+  docker:
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: [java, native-image-linux-amd64, native-image-linux-arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-image-linux-amd64
+          path: app/native-image/
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-image-linux-arm64
+          path: app/native-image/
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: assets
+          path: app/native-image/assets
+
+      - run: |
+          cd app/native-image
+          chmod +x minchir-linux-*
+          ls -la
+          tree
+
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      
+      - uses: docker/metadata-action@v4
+        id: meta
+        with:
+          flavor: |
+            latest=false
+          images: |
+            ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=edge,enable={{ is_default_branch }}
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          context: app/native-image/
+          file: app/native-image/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
   # publish release
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [java, native-image-linux-amd64, native-image-linux-arm64]
+    needs: [docker]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
