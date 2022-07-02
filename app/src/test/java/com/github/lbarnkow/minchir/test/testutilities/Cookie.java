@@ -1,4 +1,4 @@
-package com.github.lbarnkow.minchir.test.util;
+package com.github.lbarnkow.minchir.test.testutilities;
 
 import static java.lang.Boolean.TRUE;
 

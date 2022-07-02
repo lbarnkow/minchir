@@ -1,7 +1,10 @@
-
 server:
   port: 8080
   assetsPath: 'assets'
+  cookies:
+    secure: true # clients will transmit cookies only over TLS secured connections
+    httpOnly: true # clients will not grant javascript pages access to the cookies in general
+    path: "/" # clients will transmit cookies to this path and all its sub paths
 
 csrf:
   totpTtlSeconds: 300 # 5 minutes

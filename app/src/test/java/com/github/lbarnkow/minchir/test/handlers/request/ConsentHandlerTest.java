@@ -17,10 +17,11 @@ import org.junit.jupiter.api.Test;
 import com.github.lbarnkow.minchir.App;
 import com.github.lbarnkow.minchir.config.Settings;
 import com.github.lbarnkow.minchir.handlers.before.csrf.CSRFSupplier.CSRFData;
+import com.github.lbarnkow.minchir.test.testutilities.Cookie;
 import com.github.lbarnkow.minchir.test.testutilities.DefaultTestEnvironmentVariables;
 import com.github.lbarnkow.minchir.test.testutilities.FileBasedWireMock;
 import com.github.lbarnkow.minchir.test.testutilities.LdapTest;
-import com.github.lbarnkow.minchir.test.util.Cookie;
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 
@@ -29,9 +30,10 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
+@BaseTest
 @FileBasedWireMock(stubs = {"/hydra_wiremock.yaml"})
 @LdapTest(ldifFiles = {"users.ldif"})
-public class ConsentHandlerIntTest {
+public class ConsentHandlerTest {
 
   private Settings settings;
 

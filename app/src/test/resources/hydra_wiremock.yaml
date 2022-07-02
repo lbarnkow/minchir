@@ -312,36 +312,3 @@
       Content-Type: application/json
   response:
     type: json
-
-# GETting the logout challenge from ory hydra admin to test skipped logout
-- method: GET
-  url: /oauth2/auth/requests/logout
-  queryParams:
-    logout_challenge: skipped_logout_flow
-  request:
-    headers:
-      Content-Type: application/json
-  response:
-    type: json
-    body: |
-      {
-        "subject": "subject@consent.flow",
-        "sid": "c829da46-2041-400c-b72d-08324f878d0a",
-        "request_url": "https://hydra/oauth2/sessions/logout?id_token_hint=...",
-        "rp_initiated": false
-      }
-
-# Sending the logout ACCEPT request to ory hydra admin for skipped logout
-- method: PUT
-  url: /oauth2/auth/requests/logout/accept
-  queryParams:
-    logout_challenge: skipped_logout_flow
-  request:
-    headers:
-      Content-Type: application/json
-  response:
-    type: json
-    body: |
-      {
-        "redirect_to": "http://ory_admin:4445/logout_accepted"
-      }

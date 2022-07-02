@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import com.github.lbarnkow.minchir.config.Scopes;
 import com.github.lbarnkow.minchir.test.testutilities.Resource;
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 
+@BaseTest
 public class ScopesTest {
 
   @Test

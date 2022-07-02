@@ -1,8 +1,10 @@
 server:
   assetsPath: '.'
-
-server:
   port: 8080
+  cookies:
+    secure: true
+    httpOnly: true
+    path: /
 
 csrf:
   totpTtlSeconds: 300 # 5 minutes

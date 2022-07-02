@@ -1,0 +1,28 @@
+
+server:
+  port: 18080
+  assetsPath: 'assets'
+  cookies:
+    secure: false # no tls for minchir in integration tests :(
+
+csrf:
+  totpTtlSeconds: 300 # 5 minutes
+  totpKey: null # a random key is generated upon startup
+  hmacKey: null # a random key is generated upon startup
+
+hydra:
+  adminUrl: https://localhost:14445
+  timeoutMilliseconds: 5000
+  rememberForSeconds: 604800 # 7 days
+
+ldap:
+  # serverUrl: ldap://localhost:10389
+  serverUrl: ldaps://localhost:10636
+  bindDn: cn=bind_user,ou=Users,dc=minchir,dc=lbarnkow
+  bindPassword: s3cr3t
+  userSearchBaseDn: ou=Users,dc=minchir,dc=lbarnkow
+  userSearchObjectClass: posixAccount
+  userAttributeUid: uid
+  userAttributeGivenName: givenName
+  userAttributeSurname: sn
+  userAttributeMail: mail

@@ -14,7 +14,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.lbarnkow.minchir.handlers.before.csrf.CSRFSupplier;
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 
+@BaseTest
 public class CSRFSupplierTest {
 
   private static final long TEST_DATA_TOTP_STEP_SIZE = 300L;

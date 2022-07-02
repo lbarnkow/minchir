@@ -7,9 +7,7 @@
  		</encoder>
 	</appender>
 
-	<!-- <logger name="com.github.lbarnkow" level="info" additivity="false">
-		<appender-ref ref="CONSOLE"/>
-	</logger> -->
+	<logger name="com.github.lbarnkow" level="debug" />
 
 	<root level="info">
 	    <appender-ref ref="STDOUT"/>

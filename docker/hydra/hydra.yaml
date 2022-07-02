@@ -1,0 +1,86 @@
+serve:
+  admin:
+    host: ""
+    tls:
+      cert:
+        path: /certs/04-server-chain.crt
+      key:
+        path: /certs/04-server.key
+      enabled: true
+    port: 14445
+  tls:
+    cert:
+      path: /certs/04-server-chain.crt
+    key:
+      path: /certs/04-server.key
+  public:
+    host: ""
+    tls:
+      cert:
+        path: /certs/04-server-chain.crt
+      key:
+        path: /certs/04-server.key
+    port: 14444
+dsn: "memory"
+webfinger:
+  oidc_discovery: {}
+  # oidc_discovery:
+  #   token_url: https://localhost:14444/oauth2/token
+  #   auth_url: https://localhost:14444/oauth2/auth
+    # client_registration_url: https://my-service.com/clients
+    # supported_claims:
+    #   - email
+    #   - username
+    # supported_scope:
+    #   - email
+    #   - whatever
+    #   - read.photos
+    # userinfo_url: https://example.org/my-custom-userinfo-endpoint
+    # jwks_url: https://my-service.com/.well-known/jwks.json
+  jwks: {}
+    # broadcast_keys: hydra.jwt.access-token
+oidc:
+  subject_identifiers:
+    supported_types:
+      - public
+      - pairwise
+    pairwise:
+      salt: some-random-salt
+urls:
+  login: http://localhost:18080/login
+  consent: http://localhost:18080/consent
+  logout: http://localhost:18080/logout
+  post_logout_redirect: http://localhost:28080/
+  self:
+    public: https://localhost:14444/
+    issuer: https://localhost:14444/
+strategies:
+  scope: exact
+oauth2:
+  allowed_top_level_claims:
+    - username
+    - email
+    - user_uuid
+  pkce:
+    enforced_for_public_clients: false
+    enforced: false
+  client_credentials:
+    default_grant_allowed_scope: false
+  #grant:
+  #  jwt:
+  #    max_ttl: 1h
+secrets:
+  cookie:
+    - this-is-the-primary-secret
+  system:
+    - this-is-the-primary-secret
+sqa:
+  opt_out: true
+version: v1.10.6
+cgroups:
+  v1:
+    auto_max_procs_enabled: true
+log:
+  leak_sensitive_values: true
+  format: text
+  level: info

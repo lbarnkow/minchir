@@ -12,7 +12,7 @@ public class OidcClient {
   private List<String> grant_types;
   private List<String> response_types;
   private String scope;
-  private String audience;
+  private List<String> audience;
   private String owner;
   private String policy_uri;
   private List<String> allowed_cors_origins;

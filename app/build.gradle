@@ -24,6 +24,12 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
 
+    testImplementation 'com.nimbusds:oauth2-oidc-sdk:9.37.2'
+    // TODO: remove?
+    // testImplementation 'org.bouncycastle:bcpkix-jdk18on:1.71' // load and convert PEM certs to java key store
+    
+    testImplementation 'net.sourceforge.htmlunit:htmlunit:2.62.0' 
+
     // lombok stuff
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
@@ -37,6 +43,20 @@ application {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
 
-    jvmArgs "-agentlib:native-image-agent=access-filter-file=native-image/agent-config/access-filter.json,config-output-dir=native-image/config-classpath/META-INF/native-image"
+tasks.register('runMock', Test) {
+    description 'Runs a mocked environment to work on frontend templates.'
+    group 'application'
+
+    environment "MOCKED_ENVIRONMENT", "ON"
+    useJUnitPlatform()
+}
+
+tasks.register('integTest', Test) {
+    description 'Runs the integration test suite.'
+    group 'verification'
+
+    environment "INTEGRATION_TEST", "ON"
+    useJUnitPlatform()
 }

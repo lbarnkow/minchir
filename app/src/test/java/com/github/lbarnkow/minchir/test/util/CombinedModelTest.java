@@ -12,8 +12,10 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 import com.github.lbarnkow.minchir.util.TemplateModel;
 
+@BaseTest
 public class CombinedModelTest {
 
   private final Map<String, String> lowPrio = Map.of( //

@@ -11,4 +11,8 @@ COPY minchir-$TARGETOS-$TARGETARCH /minchir
 COPY assets /assets/
 
 ENTRYPOINT [ "/minchir" ]
-CMD [ "--help" ]
+CMD [ \
+    "--config", "/assets/config/config.yaml", \
+    "--scopes", "/assets/scopes/scopes.yaml", \
+    "--translation", "/assets/i18n/translations.yaml" \
+]

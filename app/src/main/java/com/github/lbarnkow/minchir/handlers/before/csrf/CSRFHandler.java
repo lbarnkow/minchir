@@ -6,7 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.lbarnkow.minchir.config.Config;
+import com.github.lbarnkow.minchir.config.Config.Cookies;
+import com.github.lbarnkow.minchir.config.Config.Csrf;
 import com.github.lbarnkow.minchir.config.Settings;
 
 import io.javalin.http.BadRequestResponse;
@@ -22,15 +23,18 @@ public class CSRFHandler implements Handler {
 
   private static final Logger LOG = LoggerFactory.getLogger(CSRFHandler.class);
 
-  private final Config config;
   private final CSRFSupplier csrfSupplier;
 
-  public CSRFHandler(Settings settings) throws InvalidKeyException, NoSuchAlgorithmException {
-    config = settings.getConfig();
+  private final Cookies cookiesConf;
+  private final Csrf csrfConf;
 
-    var totpKey = config.getCsrf().getTotpKey() != null ? config.getCsrf().getTotpKey() : CSRFSupplier.generateKey();
-    var hmacKey = config.getCsrf().getHmacKey() != null ? config.getCsrf().getHmacKey() : CSRFSupplier.generateKey();
-    csrfSupplier = new CSRFSupplier(config.getCsrf().getTotpTtlSeconds(), totpKey, hmacKey);
+  public CSRFHandler(Settings settings) throws InvalidKeyException, NoSuchAlgorithmException {
+    cookiesConf = settings.getConfig().getServer().getCookies();
+    csrfConf = settings.getConfig().getCsrf();
+
+    var totpKey = csrfConf.getTotpKey() != null ? csrfConf.getTotpKey() : CSRFSupplier.generateKey();
+    var hmacKey = csrfConf.getHmacKey() != null ? csrfConf.getHmacKey() : CSRFSupplier.generateKey();
+    csrfSupplier = new CSRFSupplier(csrfConf.getTotpTtlSeconds(), totpKey, hmacKey);
   }
 
   @Override
@@ -46,8 +50,17 @@ public class CSRFHandler implements Handler {
   public void createCsrfTokens(Context ctx) throws InvalidKeyException {
     var csrf = csrfSupplier.generate();
 
-    var cookie = new Cookie(CSRF_TOKEN_COOKIE_NAME, csrf.getCookie(), ctx.path(),
-        config.getCsrf().getTotpTtlSeconds() * 2, true, 0, true, null, null, SameSite.STRICT);
+    var cookie = new Cookie( //
+        CSRF_TOKEN_COOKIE_NAME, // name
+        csrf.getCookie(), // value
+        cookiesConf.getPath() + ctx.path(), // path
+        csrfConf.getTotpTtlSeconds() * 2, // max age
+        cookiesConf.getSecure(), // secure
+        0, // version
+        cookiesConf.getHttpOnly(), // http only
+        null, // comment
+        null, // domain
+        SameSite.STRICT); // same site
     ctx.cookie(cookie);
     ctx.attribute("csrf_token", csrf.getToken());
   }

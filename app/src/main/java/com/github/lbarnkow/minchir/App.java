@@ -1,8 +1,8 @@
 package com.github.lbarnkow.minchir;
 
-import java.util.List;
-
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.lbarnkow.minchir.config.Config;
 import com.github.lbarnkow.minchir.config.Scopes;
@@ -25,6 +25,8 @@ import picocli.CommandLine.ParameterException;
 
 @Command(name = "minchir")
 public class App {
+  private static final Logger LOG = LoggerFactory.getLogger(App.class);
+
   @Option( //
       names = {"--help"}, //
       usageHelp = true, //
@@ -43,19 +45,18 @@ public class App {
           "overriding settings in former files." //
       } //
   )
-  private List<String> configFiles;
+  private String[] configFiles;
 
   @Option( //
       required = true, //
       names = "--translation", //
-      arity = "1..*", //
       description = {"A translation file to load. At least one translation file must " + //
           "be specified! This parameter may be used mutliple times, in which case all " + //
           "translation files will be merged in to one translation-table with latter files " + //
           "overriding translations in former files." //
       } //
   )
-  private List<String> translationFiles;
+  private String[] translationFiles;
 
   @Option( //
       required = true, //
@@ -67,7 +68,7 @@ public class App {
           "overriding scopes in former files." //
       } //
   )
-  private List<String> scopesFiles;
+  private String[] scopesFiles;
 
   private static void help(CommandLine cli, int status) throws SystemExitException {
     cli.usage(System.out);
@@ -79,6 +80,9 @@ public class App {
       setupCli(args);
     } catch (SystemExitException e) {
       System.exit(e.getStatus());
+    } catch (Exception e) {
+      LOG.error("Fatal error, shutting down!", e);
+      System.exit(1);
     }
   }
 
@@ -99,9 +103,9 @@ public class App {
 
   public Javalin javalinApp() throws Exception {
     var settings = new Settings( //
-        Config.load(configFiles.toArray(new String[0])), //
-        Translations.load(translationFiles.toArray(new String[0])), //
-        Scopes.load(scopesFiles.toArray(new String[0])) //
+        Config.load(configFiles), //
+        Translations.load(translationFiles), //
+        Scopes.load(scopesFiles) //
     );
 
     return javalinApp(settings);
@@ -109,7 +113,7 @@ public class App {
 
   public Javalin javalinApp(Settings settings) throws Exception {
     var config = settings.getConfig();
-    var translations = settings.getTranslations();
+    final var translations = settings.getTranslations();
 
     var velocityEngine = new VelocityEngine();
     velocityEngine.init();
@@ -121,7 +125,7 @@ public class App {
     });
     app.jettyServer().setServerPort(config.getServer().getPort());
 
-    for (var code : new int[] {400, 404, 500}) {
+    for (final var code : new int[] {400, 404, 500}) {
       final var template = String.format("%s/%s.vtl", config.getServer().getAssetsPath("templates"), code);
       app.error(code, ctx -> {
         var lang = ctx.req.getLocale().getLanguage();

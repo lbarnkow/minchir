@@ -1,7 +1,6 @@
 package com.github.lbarnkow.minchir.hydra.impl;
 
 import static io.javalin.http.ContentType.APPLICATION_JSON;
-import static io.javalin.http.HttpCode.OK;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.eclipse.jetty.http.HttpHeader.CONTENT_TYPE;
 import static org.eclipse.jetty.http.HttpMethod.GET;
@@ -13,6 +12,7 @@ import java.util.Optional;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpMethod;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +80,13 @@ public class OryHydraAdminApiImpl implements OryHydraAdminApi {
     hydraLogoutReject = hydraLogoutChallenge + "/reject";
 
     var sslContextFactory = new SslContextFactory.Client();
+
+    if (System.getProperty("javax.net.ssl.trustStore") != null && //
+        System.getProperty("javax.net.ssl.trustStorePassword") != null) {
+      sslContextFactory.setTrustStorePath(System.getProperty("javax.net.ssl.trustStore"));
+      sslContextFactory.setTrustStorePassword(System.getProperty("javax.net.ssl.trustStorePassword"));
+    }
+
     http = new HttpClient(sslContextFactory);
     http.start();
   }
@@ -138,7 +145,7 @@ public class OryHydraAdminApiImpl implements OryHydraAdminApi {
         .grant_scope(grantScope) //
         .grant_access_token_audience(grantAccessTokenAudience) //
         .remember(remember) //
-        .remember_for(0) //
+        .remember_for(0) // TODO: make configurable
         .build();
 
     var response =
@@ -198,16 +205,30 @@ public class OryHydraAdminApiImpl implements OryHydraAdminApi {
 
     var response = request.send();
 
-    if (response.getStatus() != OK.getStatus() || response.getMediaType() != APPLICATION_JSON.getMimeType()) {
-      LOG.warn("Failed to interact with ory hydra ({} - {}) for {} challenge '{}': {}", //
+    if (!isStatusOK(response.getStatus()) || //
+        !isMediaTypeOK(response.getMediaType())) {
+      LOG.warn("Failed to interact with ory hydra ({} - {}) for {} challenge '{}': {}, {}, {}", //
           method.asString(), //
           body != null ? body.getClass().getSimpleName() : "null", //
           challengeName, //
           challengeValue, //
+          response.getStatus(), //
+          response.getMediaType(), //
           response.getContentAsString());
       throw new BadRequestResponse();
     }
 
+    LOG.debug(response.getContentAsString());
+
     return response.getContentAsString();
+  }
+
+  private boolean isStatusOK(int status) {
+    return status >= HttpStatus.OK_200 && status < HttpStatus.MULTIPLE_CHOICES_300;
+  }
+
+  private boolean isMediaTypeOK(String mediaType) {
+    return mediaType == null || //
+        APPLICATION_JSON.getMimeType().equals(mediaType);
   }
 }

@@ -8,44 +8,82 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import lombok.Data;
 
 @Data
-public class Config {
+public class Config implements Normalizable {
 
   private Server server;
   private Csrf csrf;
   private Hydra hydra;
   private Ldap ldap;
 
+  @Override
+  public void normalize() {
+    server.normalize();
+    csrf.normalize();
+    hydra.normalize();
+    ldap.normalize();
+  }
+
   @Data
-  public static class Server {
+  public static class Server implements Normalizable {
     private Integer port;
     private String assetsPath;
+    private String fallbackRedirect;
+    private Cookies cookies;
 
     public String getAssetsPath(String subfolder) {
       return assetsPath + File.separator + subfolder + File.separator;
     }
+
+    @Override
+    public void normalize() {
+      assetsPath = normalizeOsPath(assetsPath);
+      cookies.normalize();
+    }
   }
 
   @Data
-  public static class Csrf {
+  public static class Cookies implements Normalizable {
+    private Boolean secure;
+    private Boolean httpOnly;
+    private String path;
+
+    @Override
+    public void normalize() {
+      path = normalizeUrlPath(path);
+    }
+  }
+
+  @Data
+  public static class Csrf implements Normalizable {
     private Integer totpTtlSeconds;
     private String totpKey;
     private String hmacKey;
+
+    @Override
+    public void normalize() {}
   }
 
   @Data
-  public static class Hydra {
+  public static class Hydra implements Normalizable {
     private String adminUrl;
     private Long timeoutMilliseconds;
     private Long rememberForSeconds;
+
+    @Override
+    public void normalize() {
+      adminUrl = normalizeUrlPath(adminUrl);
+    }
   }
 
   @Data
-  public static class Ldap {
+  public static class Ldap implements Normalizable {
     private String serverUrl;
     private String bindDn;
     private String bindPassword;
@@ -55,6 +93,9 @@ public class Config {
     private String userAttributeGivenName;
     private String userAttributeSurname;
     private String userAttributeMail;
+
+    @Override
+    public void normalize() {}
   }
 
   public static Config load(String... paths) {
@@ -66,7 +107,10 @@ public class Config {
         if (overlay == result)
           continue;
         mergeObjects(result, overlay);
+        LOG.debug("Effective configuration: {}", result);
       }
+
+      result.normalize();
 
       return result;
     } catch (Exception e) {
@@ -98,12 +142,16 @@ public class Config {
       Double.class, //
       String.class);
 
+  private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+
   private static void mergeObjects(Object base, Object overlay)
       throws IllegalArgumentException, IllegalAccessException {
     var fields = base.getClass().getDeclaredFields();
 
     for (var field : fields) {
       if ((field.getModifiers() & Modifier.STATIC) != 0)
+        continue;
+      if ((field.getModifiers() & Modifier.FINAL) != 0)
         continue;
 
       var baseVal = field.get(base);
@@ -124,5 +172,20 @@ public class Config {
 
       mergeObjects(baseVal, overlayVal);
     }
+  }
+
+  private static String normalizeOsPath(String path) {
+    return normalizePath(path, File.separator);
+  }
+
+  private static String normalizeUrlPath(String path) {
+    return normalizePath(path, "/");
+  }
+
+  private static String normalizePath(String path, String seperator) {
+    while (path.endsWith(seperator)) {
+      path = path.substring(0, path.length() - 1);
+    }
+    return path;
   }
 }

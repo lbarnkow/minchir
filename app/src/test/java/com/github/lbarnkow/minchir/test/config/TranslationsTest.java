@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import com.github.lbarnkow.minchir.config.Translations;
 import com.github.lbarnkow.minchir.test.testutilities.Resource;
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 
+@BaseTest
 public class TranslationsTest {
 
   @Test

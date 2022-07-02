@@ -16,10 +16,11 @@ import org.junit.jupiter.api.Test;
 import com.github.lbarnkow.minchir.App;
 import com.github.lbarnkow.minchir.config.Settings;
 import com.github.lbarnkow.minchir.handlers.before.csrf.CSRFSupplier.CSRFData;
+import com.github.lbarnkow.minchir.test.testutilities.Cookie;
 import com.github.lbarnkow.minchir.test.testutilities.DefaultTestEnvironmentVariables;
 import com.github.lbarnkow.minchir.test.testutilities.FileBasedWireMock;
 import com.github.lbarnkow.minchir.test.testutilities.LdapTest;
-import com.github.lbarnkow.minchir.test.util.Cookie;
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 
@@ -28,9 +29,10 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
+@BaseTest
 @FileBasedWireMock(stubs = {"/hydra_wiremock.yaml"})
 @LdapTest(ldifFiles = {"users.ldif"})
-public class LogoutHandlerIntTest {
+public class LogoutHandlerTest {
 
   private Settings settings;
 
@@ -61,19 +63,6 @@ public class LogoutHandlerIntTest {
         });
 
         assertThat(postResponse.code()).isEqualTo(MOVED_TEMPORARILY_302);
-        verify(putRequestedFor(urlPathEqualTo("/oauth2/auth/requests/logout/accept")));
-      });
-    }
-  }
-
-  @Test
-  void test_successful_skipped_logout() throws Exception {
-    try (var app = new App().javalinApp(settings)) {
-      TestUtil.test(app, (server, client) -> {
-        client.setOkHttp(new OkHttpClient().newBuilder().followRedirects(false).build());
-        var getResponse = client.get("/logout?logout_challenge=skipped_logout_flow");
-
-        assertThat(getResponse.code()).isEqualTo(MOVED_TEMPORARILY_302);
         verify(putRequestedFor(urlPathEqualTo("/oauth2/auth/requests/logout/accept")));
       });
     }

@@ -3,11 +3,13 @@ package com.github.lbarnkow.minchir.test.trash;
 import org.junit.jupiter.api.Test;
 
 import com.github.lbarnkow.minchir.test.testutilities.LdapTest;
+import com.github.lbarnkow.minchir.test.testutilities.baseclasses.BaseTest;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.SearchRequest;
 import com.unboundid.ldap.sdk.SearchScope;
 
+@BaseTest
 @LdapTest(ldifFiles = {"users.ldif"})
 public class LdapStuff {
   @Test

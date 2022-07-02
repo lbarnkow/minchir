@@ -37,16 +37,10 @@ public class LogoutHandler extends AbstractHandler {
     var logoutChallenge = hydraAdmin.fetchLogoutChallenge(logoutChallengeParam);
     ctx.attribute("logout_challenge", logoutChallengeParam);
 
-    if (!logoutChallenge.isRp_initiated()) {
-      LOG.debug("Skipping logout form as it was not initiated by the relying party (client app)!");
-      var acceptResponse = hydraAdmin.acceptLogout(ctx, logoutChallengeParam);
-      ctx.redirect(acceptResponse.getRedirect_to());
-    } else {
-      LOG.debug("Rendering logout page.");
-      ctx.attribute("subject", logoutChallenge.getSubject());
+    LOG.debug("Rendering logout page.");
+    ctx.attribute("subject", logoutChallenge.getSubject());
 
-      super.doGet(ctx);
-    }
+    super.doGet(ctx);
   }
 
   @Override
@@ -65,7 +59,7 @@ public class LogoutHandler extends AbstractHandler {
     if (cancel) {
       LOG.debug("User submitted via cancel button.");
       hydraAdmin.rejectLogout(ctx, logoutChallenge);
-      ctx.redirect("https://www.github.com/"); // TODO
+      ctx.redirect("40404"); // TODO
       return;
     }
 
