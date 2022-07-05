@@ -1,0 +1,439 @@
+#########
+# LOGIN #
+#########
+
+- method: DELETE
+  url: /oauth2/auth/sessions/consent
+  queryParams:
+    subject: janedoe
+    all: "true"
+  response:
+    status: 204
+    body: ""
+
+- method: GET
+  url: /oauth2/auth
+  state:
+    from: Started
+  queryParams:
+    client_id: oidc-client-1
+    response_type: code
+    scope: openid
+    redirect_uri: http://localhost:8080/
+    state: f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea
+  response:
+    status: 302
+    headers:
+      Location: http://localhost:8080/login?login_challenge=wiremock
+    body: Redirect to Location-Header
+
+- method: GET
+  url: /oauth2/auth
+  state:
+    from: LoggedInConsented
+  queryParams:
+    client_id: oidc-client-1
+    response_type: code
+    scope: openid
+    redirect_uri: http://localhost:8080/
+    state: f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea
+  response:
+    status: 302
+    headers:
+      Location: http://localhost:8080/?scope=openid&state=f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea&code=4711
+    body: Redirect to Location-Header
+
+- method: GET
+  url: /oauth2/auth
+  state:
+    from: LoggedOutConsented
+  queryParams:
+    client_id: oidc-client-1
+    response_type: code
+    scope: openid
+    redirect_uri: http://localhost:8080/
+    state: f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea
+  response:
+    status: 302
+    headers:
+      Location: http://localhost:8080/login?login_challenge=wiremock
+    body: Redirect to Location-Header
+
+- method: GET
+  url: /oauth2/auth/requests/login
+  queryParams:
+    login_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "wiremock",
+        "requested_scope": ["openid"],
+        "requested_access_token_audience": null,
+        "skip": false,
+        "subject": "",
+        "oidc_context": {},
+        "client": {
+          "client_id": "oidc-client-1",
+          "client_name": "Wiremock Oidc Client",
+          "redirect_uris": ["http://localhost:8080/"],
+          "grant_types": ["authorization_code"],
+          "response_types": ["code"],
+          "scope": "openid",
+          "audience": null,
+          "owner": "",
+          "policy_uri": "",
+          "allowed_cors_origins": null,
+          "tos_uri": "",
+          "client_uri": "",
+          "logo_uri": "",
+          "contacts": null,
+          "client_secret_expires_at": 0,
+          "subject_type": "public",
+          "token_endpoint_auth_method": "client_secret_basic",
+          "userinfo_signed_response_alg": "none",
+          "created_at": "2020-07-08T12:31:47Z",
+          "updated_at": "2020-07-08T12:31:47Z"
+        },
+        "request_url": "nonsense",
+        "session_id": "d3c98aa6-67ae-478b-bc30-f7887b58f630"
+      }
+
+- method: GET
+  url: /oauth2/auth/requests/login
+  queryParams:
+    login_challenge: notok
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    status: 400
+    body: error
+
+- method: PUT
+  url: /oauth2/auth/requests/login/accept
+  state:
+    from: Started
+    to: LoggedIn
+  queryParams:
+    login_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "subject": "janedoe",
+          "remember": true,
+          "remember_for": 604800
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/consent?consent_challenge=wiremock"
+      }
+
+- method: PUT
+  url: /oauth2/auth/requests/login/reject
+  state:
+    from: Started
+  queryParams:
+    login_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "error": "access_denied",
+          "error_description": "The resource owner denied the request"
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/?state=f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea&error=access_denied&error_description=The+resource+owner+denied+the+request"
+      }
+
+- method: PUT
+  url: /oauth2/auth/requests/login/accept
+  state:
+    from: LoggedOutConsented
+    to: LoggedInConsented
+  queryParams:
+    login_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "subject": "janedoe",
+          "remember": true,
+          "remember_for": 604800
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/consent?consent_challenge=wiremock"
+      }
+
+- method: GET
+  url: /oauth2/auth/requests/consent
+  state:
+    from: LoggedIn
+  queryParams:
+    consent_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "wiremock",
+        "requested_scope": ["openid"],
+        "requested_access_token_audience": [],
+        "skip": false,
+        "subject": "janedoe",
+        "oidc_context": {
+          "acr_values": [],
+          "display": "",
+          "id_token_hint_claims": {},
+          "login_hint": "",
+          "ui_locales": []
+        },
+        "client": {
+          "client_id": "oidc-client-1",
+          "client_name": "Wiremock Oidc Client",
+          "redirect_uris": ["http://localhost:8080/"],
+          "grant_types": ["authorization_code"],
+          "response_types": ["code"],
+          "scope": "openid",
+          "audience": null,
+          "owner": "",
+          "policy_uri": "",
+          "allowed_cors_origins": null,
+          "tos_uri": "",
+          "client_uri": "",
+          "logo_uri": "",
+          "contacts": null,
+          "client_secret_expires_at": 0,
+          "subject_type": "public",
+          "token_endpoint_auth_method": "client_secret_basic",
+          "userinfo_signed_response_alg": "none",
+          "created_at": "2020-07-08T12:31:47Z",
+          "updated_at": "2020-07-08T12:31:47Z"
+        },
+        "request_url": "nonsense",
+        "login_challenge": "wiremock",
+        "login_session_id": "d3c98aa6-67ae-478b-bc30-f7887b58f630",
+        "acr": ""
+      }
+
+- method: GET
+  url: /oauth2/auth/requests/consent
+  state:
+    from: LoggedInConsented
+  queryParams:
+    consent_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "challenge": "wiremock",
+        "requested_scope": ["openid"],
+        "requested_access_token_audience": [],
+        "skip": true,
+        "subject": "janedoe",
+        "oidc_context": {
+          "acr_values": [],
+          "display": "",
+          "id_token_hint_claims": {},
+          "login_hint": "",
+          "ui_locales": []
+        },
+        "client": {
+          "client_id": "oidc-client-1",
+          "client_name": "Wiremock Oidc Client",
+          "redirect_uris": ["http://localhost:8080/"],
+          "grant_types": ["authorization_code"],
+          "response_types": ["code"],
+          "scope": "openid",
+          "audience": null,
+          "owner": "",
+          "policy_uri": "",
+          "allowed_cors_origins": null,
+          "tos_uri": "",
+          "client_uri": "",
+          "logo_uri": "",
+          "contacts": null,
+          "client_secret_expires_at": 0,
+          "subject_type": "public",
+          "token_endpoint_auth_method": "client_secret_basic",
+          "userinfo_signed_response_alg": "none",
+          "created_at": "2020-07-08T12:31:47Z",
+          "updated_at": "2020-07-08T12:31:47Z"
+        },
+        "request_url": "nonsense",
+        "login_challenge": "wiremock",
+        "login_session_id": "d3c98aa6-67ae-478b-bc30-f7887b58f630",
+        "acr": ""
+      }
+
+- method: GET
+  url: /oauth2/auth/requests/consent
+  queryParams:
+    consent_challenge: notok
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    status: 400
+    body: error
+
+- method: PUT
+  url: /oauth2/auth/requests/consent/accept
+  state:
+    from: LoggedIn
+    to: LoggedInConsented
+  queryParams:
+    consent_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+        "grant_scope": ["openid"],
+        "grant_access_token_audience": [],
+        "remember": true,
+        "remember_for": 0
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/?scope=openid&state=f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea&code=4711"
+      }
+
+- method: PUT
+  url: /oauth2/auth/requests/consent/reject
+  state:
+    from: LoggedIn
+  queryParams:
+    consent_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "error": "access_denied",
+          "error_description": "The resource owner denied the request"
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/?state=f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea&error=access_denied&error_description=The+resource+owner+denied+the+request"
+      }
+
+- method: PUT
+  url: /oauth2/auth/requests/consent/accept
+  state:
+    from: LoggedInConsented
+  queryParams:
+    consent_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+        "grant_scope": ["openid"],
+        "grant_access_token_audience": [],
+        "remember": true,
+        "remember_for": 0
+      }
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/?scope=openid&state=f69ebbf6-c43b-4e3a-b7af-63a4a9dc09ea&code=4711"
+      }
+
+- method: GET
+  url: /oauth2/sessions/logout
+  state:
+    from: LoggedInConsented
+  response:
+    status: 302
+    headers:
+      Location: http://localhost:8080/logout?logout_challenge=wiremock
+    body: Redirect to Location-Header
+
+- method: GET
+  url: /oauth2/auth/requests/logout
+  state:
+    from: LoggedInConsented
+  queryParams:
+    logout_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "subject": "janedoe",
+        "sid": "c829da46-2041-400c-b72d-08324f878d0a",
+        "request_url": "nonsense",
+        "rp_initiated": false
+      }
+
+- method: GET
+  url: /oauth2/auth/requests/logout
+  queryParams:
+    logout_challenge: notok
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    status: 400
+    body: error
+
+- method: PUT
+  url: /oauth2/auth/requests/logout/accept
+  state:
+    from: LoggedInConsented
+    to: LoggedOutConsented
+  queryParams:
+    logout_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/"
+      }
+
+- method: PUT
+  url: /oauth2/auth/requests/logout/reject
+  state:
+    from: LoggedInConsented
+  queryParams:
+    logout_challenge: wiremock
+  request:
+    headers:
+      Content-Type: application/json
+  response:
+    type: json
+    body: |
+      {
+        "redirect_to": "http://localhost:8080/404"
+      }
