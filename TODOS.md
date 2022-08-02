@@ -18,3 +18,4 @@
         * query for group obects with filter on attribe member
     * map groups to
         * additional claim groups
+* prometheus metrics support

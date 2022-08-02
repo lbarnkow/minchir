@@ -24,10 +24,9 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
 
-    testImplementation 'com.nimbusds:oauth2-oidc-sdk:9.37.2'
+    testImplementation 'com.nimbusds:oauth2-oidc-sdk:9.37.2' // TODO: remove?
     // TODO: remove?
     // testImplementation 'org.bouncycastle:bcpkix-jdk18on:1.71' // load and convert PEM certs to java key store
-    
     testImplementation 'net.sourceforge.htmlunit:htmlunit:2.62.0' 
 
     // lombok stuff
