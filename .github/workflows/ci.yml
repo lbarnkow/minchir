@@ -19,9 +19,42 @@ jobs:
 
       - run: |
           java -version
+
+          # Build and run unit tests
           cd app
           ../gradlew --no-daemon clean test installDist distZip
+
+      - run: |
           docker version
+
+          # Start integration test environment
+          cd docker
+          docker compose up --detach
+          sleep 5
+          cd ..
+
+          # Run application under test
+          cd app
+          export APP_OPTS="\
+              -Xmx300M \
+              -Djavax.net.ssl.trustStore=../docker/certs/truststore.jks \
+              -Djavax.net.ssl.trustStorePassword=changeit"
+          build/install/app/bin/app \
+              --config assets/config/config.yaml \
+              --config src/test/resources/integtest/config.yaml \
+              --scopes assets/scopes/scopes.yaml \
+              --translation assets/i18n/translations.yaml > /dev/null &
+
+          # Run integration tests
+          ../gradlew cleanIntegTest integTest
+          cd ..
+
+          # Stop application under test
+          kill %%
+
+          # Stop integration test environment
+          cd docker
+          docker compose down --volumes
 
       - uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
