@@ -10,7 +10,7 @@ RUN \
         --no-fallback \
         --static \
         --libc=glibc \
-        --class-path './config-classpath/:../build/install/app/lib/*' \
+        --class-path '../build/install/app/lib/*' \
         com.github.lbarnkow.minchir.App \
         minchir
 

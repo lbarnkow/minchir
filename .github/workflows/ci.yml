@@ -12,7 +12,7 @@ jobs:
 
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
+          version: '22.1.0'
           java-version: '17'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -108,7 +108,7 @@ jobs:
               --no-fallback \
               --static \
               --libc=glibc \
-              --class-path './config-classpath/:../gradle-install/lib/*' \
+              --class-path '../gradle-install/lib/*' \
               com.github.lbarnkow.minchir.App \
               minchir-linux-amd64
           ./minchir-linux-amd64 --help
@@ -195,7 +195,9 @@ jobs:
               --scopes assets/scopes/scopes.yaml \
               --translation assets/i18n/translations.yaml \
               -Djavax.net.ssl.trustStore=../docker/certs/truststore.jks \
-              -Djavax.net.ssl.trustStorePassword=changeit > /dev/null &
+              -Djavax.net.ssl.trustStorePassword=changeit &
+
+          sleep 15
 
           # Run integration tests
           ../gradlew --no-daemon cleanIntegTest integTest

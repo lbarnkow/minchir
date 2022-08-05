@@ -16,7 +16,7 @@ RUN \
         --no-fallback \
         --static \
         --libc=glibc \
-        --class-path './config-classpath/:../gradle-install/lib/*' \
+        --class-path '../gradle-install/lib/*' \
         com.github.lbarnkow.minchir.App \
         minchir-linux-arm64
 
