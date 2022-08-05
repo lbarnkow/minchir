@@ -55,7 +55,7 @@ jobs:
           docker compose down --volumes
 
       - uses: actions/upload-artifact@v3
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        #if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         with:
           name: gradle-install
           path: app/build/install/app/
@@ -67,7 +67,7 @@ jobs:
           path: app/assets/
 
       - uses: actions/upload-artifact@v3
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        #if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         with:
           name: native-image-configs
           path: app/native-image
@@ -212,7 +212,7 @@ jobs:
   # build and push docker images
   docker:
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-    needs: [java, native-image-linux-amd64, native-image-linux-arm64]
+    needs: [java, native-image-linux-amd64, native-image-linux-arm64, native-image-linux-amd64-test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
