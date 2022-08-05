@@ -1,5 +1,6 @@
 # TODOs
 
+* logging: log stacktraces in level TRACE
 * translations:
     * allow regional variations, e.g. pt_BR (Portuguese Brazil) vs. pt_PT (Portuguese Portugal), see https://metacpan.org/release/DROLSKY/DateTime-Locale-0.42/view/lib/DateTime/Locale/Catalog.pm for more examples
     * have some public demo setup to facilitate translations testing/editing?

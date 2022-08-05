@@ -81,7 +81,8 @@ public class App {
     } catch (SystemExitException e) {
       System.exit(e.getStatus());
     } catch (Exception e) {
-      LOG.error("Fatal error, shutting down!", e);
+      LOG.error("Fatal error, shutting down! {}", e.getMessage());
+      LOG.trace("", e);
       System.exit(1);
     }
   }

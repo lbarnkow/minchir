@@ -11,79 +11,58 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.representer.Representer;
 
 import lombok.Data;
 
 @Data
-public class Config implements Normalizable {
+public class Config implements Normalizable, Validatable {
 
   private Server server;
   private Csrf csrf;
   private Hydra hydra;
   private Ldap ldap;
 
-  @Override
-  public void normalize() {
-    server.normalize();
-    csrf.normalize();
-    hydra.normalize();
-    ldap.normalize();
-  }
-
   @Data
-  public static class Server implements Normalizable {
+  public static class Server implements Normalizable, Validatable {
     private Integer port;
+    @NormalizeEnd(separator = PathType.OsPath)
     private String assetsPath;
-    private String fallbackRedirect;
+    // private String fallbackRedirect;
     private Cookies cookies;
 
     public String getAssetsPath(String subfolder) {
       return assetsPath + File.separator + subfolder + File.separator;
     }
-
-    @Override
-    public void normalize() {
-      assetsPath = normalizeOsPath(assetsPath);
-      cookies.normalize();
-    }
   }
 
   @Data
-  public static class Cookies implements Normalizable {
+  public static class Cookies implements Normalizable, Validatable {
     private Boolean secure;
     private Boolean httpOnly;
+    @NormalizeEnd(separator = PathType.UrlPath)
     private String path;
-
-    @Override
-    public void normalize() {
-      path = normalizeUrlPath(path);
-    }
   }
 
   @Data
-  public static class Csrf implements Normalizable {
+  public static class Csrf implements Normalizable, Validatable {
     private Integer totpTtlSeconds;
+    @Nullable
     private String totpKey;
+    @Nullable
     private String hmacKey;
-
-    @Override
-    public void normalize() {}
   }
 
   @Data
-  public static class Hydra implements Normalizable {
+  public static class Hydra implements Normalizable, Validatable {
+    @NormalizeEnd(separator = PathType.UrlPath)
     private String adminUrl;
     private Long timeoutMilliseconds;
     private Long rememberForSeconds;
-
-    @Override
-    public void normalize() {
-      adminUrl = normalizeUrlPath(adminUrl);
-    }
   }
 
   @Data
-  public static class Ldap implements Normalizable {
+  public static class Ldap implements Normalizable, Validatable {
     private String serverUrl;
     private String bindDn;
     private String bindPassword;
@@ -93,9 +72,6 @@ public class Config implements Normalizable {
     private String userAttributeGivenName;
     private String userAttributeSurname;
     private String userAttributeMail;
-
-    @Override
-    public void normalize() {}
   }
 
   public static Config load(String... paths) {
@@ -110,6 +86,7 @@ public class Config implements Normalizable {
         LOG.debug("Effective configuration: {}", result);
       }
 
+      result.validate();
       result.normalize();
 
       return result;
@@ -119,7 +96,9 @@ public class Config implements Normalizable {
   }
 
   private static <T> List<T> loadFiles(String[] paths, Class<T> clazz) throws IOException {
-    var yaml = new Yaml();
+    var yamlRep = new Representer();
+    yamlRep.getPropertyUtils().setSkipMissingProperties(true);
+    var yaml = new Yaml(yamlRep);
     var result = new ArrayList<T>();
 
     for (var path : paths) {
@@ -172,20 +151,5 @@ public class Config implements Normalizable {
 
       mergeObjects(baseVal, overlayVal);
     }
-  }
-
-  private static String normalizeOsPath(String path) {
-    return normalizePath(path, File.separator);
-  }
-
-  private static String normalizeUrlPath(String path) {
-    return normalizePath(path, "/");
-  }
-
-  private static String normalizePath(String path, String seperator) {
-    while (path.endsWith(seperator)) {
-      path = path.substring(0, path.length() - 1);
-    }
-    return path;
   }
 }

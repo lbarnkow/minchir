@@ -20,7 +20,8 @@ jobs:
       - run: |
           java -version
           cd app
-          ../gradlew --no-daemon test installDist distZip
+          ../gradlew --no-daemon clean test installDist distZip
+          docker version
 
       - uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')

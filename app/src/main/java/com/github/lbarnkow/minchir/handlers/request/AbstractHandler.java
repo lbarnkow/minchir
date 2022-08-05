@@ -58,7 +58,8 @@ public abstract class AbstractHandler implements EndpointGroup {
     try {
       handler.handle(ctx);
     } catch (Exception e) {
-      LOG.error("Error handling {} for {}!", ctx.req.getMethod(), getRoute(), e);
+      LOG.error("Error handling {} for {}! {}", ctx.req.getMethod(), getRoute(), e.getMessage());
+      LOG.trace("", e);
       throw e;
     }
   }

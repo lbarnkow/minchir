@@ -5,11 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.lbarnkow.minchir.App;
-import com.github.lbarnkow.minchir.testutilities.baseclasses.BaseTest;
+import com.github.lbarnkow.minchir.testutilities.baseclasses.IntegrationTest;
 import com.github.lbarnkow.minchir.util.SystemExitException;
 
-@BaseTest
+@IntegrationTest
 class AppTest {
 
   @Test
