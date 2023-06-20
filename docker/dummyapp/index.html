@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dummy App</title>
+
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+</head>
+
+<body>
+    <h1>Dummy-App</h1>
+    <h3>State: <span id="state">hä</span></h3>
+    <h3>Query params:</h3>
+    <ul id="list"></ul>
+    <script>
+        const search = new URLSearchParams(window.location.search);
+
+        const params = new Proxy(search, {
+            get(target, prop, receiver) {
+                return target.get(prop)
+            }
+        });
+
+        var state = document.getElementById('state');
+        var list = document.getElementById('list');
+
+        if (params.code != null) {
+            state.innerHTML =
+                'Got authorization code: ' + params.code +
+                ' --> ' +
+                '<a href="https://localhost:14444/oauth2/sessions/logout">Logout</a>'
+        } else {
+            state.innerHTML =
+                'State unknown, probably logged out' +
+                ' --> ' +
+                '<a href="https://localhost:14444/oauth2/auth?client_id=oidc-client-1&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A28080%2F&state=a990fe41-6620-407e-891c-d6f780cb404c">Login now</a>'
+        }
+
+        var html = '';
+        for (var pair of search.entries()) {
+            html += '<li>' + pair[0] + ': ' + pair[1] + '</li>';
+        }
+        list.innerHTML = html;
+        // alert(params.bla)
+        // alert(params.hui)
+        // alert(params.huii)
+
+
+  </script>
+</body>
+</html>

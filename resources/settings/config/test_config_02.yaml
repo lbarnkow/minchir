@@ -1,0 +1,6 @@
+server:
+  port: 18080
+
+ldap:
+  bindPassword: password123
+  caBundle: "/etc/ssl/cabundle.pem"

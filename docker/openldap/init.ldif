@@ -1,0 +1,54 @@
+dn: dc=minchir,dc=lbarnkow
+objectClass: dcObject
+objectClass: organization
+dc: minchir
+o: lbarnkow/minchir
+
+dn: ou=Users,dc=minchir,dc=lbarnkow
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Groups,dc=minchir,dc=lbarnkow
+objectClass: organizationalUnit
+ou: Groups
+
+dn: cn=bind_user,ou=Users,dc=minchir,dc=lbarnkow
+objectClass: person
+objectClass: inetOrgPerson
+cn: bind_user
+sn: bind_user
+userPassword: s3cr3t
+
+dn: cn=janedoe,ou=Users,dc=minchir,dc=lbarnkow
+objectClass: person
+objectClass: inetOrgPerson
+cn: janedoe
+givenName: Jane
+sn: Doe
+mail: jane.doe@minchir.lbarnkow
+userPassword: 12345
+
+dn: cn=johndoe,ou=Users,dc=minchir,dc=lbarnkow
+objectClass: person
+objectClass: inetOrgPerson
+cn: johndoe
+givenName: John
+sn: Doe
+mail: john.doe@minchir.lbarnkow
+userPassword: 54321
+
+dn: cn=Admins,ou=Groups,dc=minchir,dc=lbarnkow
+cn: Admins
+objectClass: groupOfNames
+member: cn=janedoe,ou=Users,dc=minchir,dc=lbarnkow
+
+dn: cn=Devs,ou=Groups,dc=minchir,dc=lbarnkow
+cn: Devs
+objectClass: groupOfNames
+member: cn=janedoe,ou=Users,dc=minchir,dc=lbarnkow
+member: cn=johndoe,ou=Users,dc=minchir,dc=lbarnkow
+
+dn: cn=Friends,ou=Groups,dc=minchir,dc=lbarnkow
+cn: Friends
+objectClass: groupOfNames
+member: cn=johndoe,ou=Users,dc=minchir,dc=lbarnkow

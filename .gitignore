@@ -304,3 +304,8 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,visualstudiocode,nanoc,vim,emacs,gradle,maven,intellij+all
+
+### Rust
+
+/target
+

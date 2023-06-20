@@ -1,0 +1,59 @@
+[package]
+name = "minchir"
+version = "0.2.0"
+edition = "2021"
+
+# https://github.com/johnthagen/min-sized-rust
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+
+
+[dependencies]
+derive-new = { version = "0.5" }
+derive-getters = { version = "0.2" }
+derive_builder = { version = "0.11" }
+tracing = { version = "0.1" }
+tracing-subscriber = { version = "0.3", features = ["env-filter" ] }
+axum = { version = "0.5" }
+tera = { version = "1" }
+hyper = { version = "0.14", features = [ "full" ] }
+tower = { version = "0.4", features = [ "limit", "timeout", "buffer" ] }
+tower-http = { version = "0.3", features = [ "trace", "limit", "timeout", "map-request-body", "util", "fs" ] }
+tower-cookies = { version = "0.7" }
+cookie = { version = "0.16" }
+http = { version = "0.2" }
+http-body = { version = "0.4" }
+reqwest = { version = "0.11", default-features = false, features = [ "json", "cookies", "rustls-tls", "blocking" ] }
+tokio = { version = "1", features = ["full"] }
+clap = { version = "3", default-features = false, features = [ "std", "color", "suggestions", "derive" ] }
+serde = { version = "1" }
+serde_yaml = { version = "0.9" }
+serde_urlencoded = { version = "0.7" }
+serde_json = { version = "1" }
+mime = { version = "0.3" }
+thiserror = { version = "1" }
+enum_dispatch = { version = "0.3" }
+totp-rs = { version = "3.0" }
+hmac = { version = "0.12" }
+sha2 = { version = "0.10" }
+rand = { version = "0.8" }
+base32 = { version = "0.4" }
+accept-language = { version = "2" }
+unic-langid = { version = "0.9" }
+ory-hydra-client = { version = "1.11.8" }
+ldap3 = { version = "0.10", default-features = false, features = [ "tls-rustls" ] }
+deadpool = { version = "0.9", default-features = false, features = ["managed"] }
+deadpool-ldap = { version = "0.3", default-features = true, features = [ "tls-rustls" ] }
+rustls = { version = "0.20.7" }
+rustls-pemfile = { version = "1.0.1" }
+
+[dev-dependencies]
+no_browser = "0.1.0"
+serial_test = "*"
+scraper = "0.13"
+lazy_static = "1"
+rstest = "0.15"
+mockall = "0.11"
+tokio-test = "*"

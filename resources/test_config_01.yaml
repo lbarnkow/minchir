@@ -1,0 +1,28 @@
+server:
+  port: 8080
+  assetsPath: 'assets'
+  cookies:
+    secure: true
+    httpOnly: true
+    path: "/"
+
+csrf:
+  totpTtlSeconds: 300 # 5 minutes
+  totpKey: null
+  hmacKey: null
+
+hydra:
+  adminUrl: http://localhost:4445
+  timeoutMilliseconds: 5000
+  rememberForSeconds: 604800 # 7 days
+
+ldap:
+  serverUrl: ldaps://localhost:636
+  bindDn: cn=binduser,ou=Users,dc=lbarnkow,dc=github,dc=com
+  bindPassword: weakpassword
+  userSearchBaseDn: ou=Users,dc=lbarnkow,dc=github,dc=com
+  userSearchObjectClass: person
+  userAttributeUid: uid
+  userAttributeGivenName: givenName
+  userAttributeSurname: sn
+  userAttributeMail: mail

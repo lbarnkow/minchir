@@ -1,0 +1,116 @@
+# File must be encoded in UTF-8!
+en:
+  site_title: "SSO"
+  login_title: "Login"
+  login_username_label: "Username"
+  login_password_label: "Password"
+  login_totp_label: "TOTP (Time-based one-time password)"
+  login_remember_label: "Keep me logged in"
+  login_cancel: "Cancel"
+  login_submit: "Login"
+  login_bad_credentials: "Login failed; your credentials were incorrect."
+  consent_title: "Consent"
+  consent_access_account: "wants to access your account"
+  consent_permissions_header: "The following permissions are requested by the above app."
+  consent_review_header: "Please review these and <b>Grant access</b> if it is OK."
+  consent_remember_label: "Remember my consent"
+  consent_permissions_footer: "Your consent to provide access is required. If you do not approve, click <b>Cancel</b>, in which case no information will be shared with the app."
+  consent_cancel: "Deny access"
+  consent_submit: "Grant access"
+  logout_title: "Logout"
+  logout_account_label: "Account"
+  logout_description: "You are about to log out from your identity provider."
+  logout_explanation: "This should log you out of all associated applications, however, you should verify this for each individual application you used with this account."
+  logout_cancel: "Cancel"
+  logout_submit: "Logout"
+  s400_title: "400 - Bad request"
+  s400_message: "You did something wrong. 🥲"
+  s404_title: "404 - Page not found"
+  s404_message: "Where are you going? 😵‍💫"
+  s500_title: "500 - Internal server error"
+  s500_message: "I did something wrong. I'm sorry. 😭"
+  scope_openid: Access to your username used for login.
+  scope_offline_access: Allow the app to impersonate you even when you are not present (not logged in).
+  scope_offline: Allow the app to impersonate you even when you are not present (not logged in).
+  scope_profile: Access to the following personal profile information
+  scope_email: Access to your e-mail address.
+  scope_address: Access to your postal address.
+  scope_phone: Access to your telephone number.
+  claim_sub: Reading your username used for login.
+  claim_name: Full name including all name parts, titles and suffixes
+  claim_family_name: Surname or last name
+  claim_given_name: Given name or first name
+  claim_middle_name: Middle name
+  claim_nickname: Casual name
+  claim_preferred_username: Shorthand name, such as janedoe or j.doe
+  claim_profile: URL of your profile page
+  claim_picture: URL of your profile picture
+  claim_website: URL of your web page or blog
+  claim_gender: Gender
+  claim_birthdate: Birthday
+  claim_zoneinfo: Time zone
+  claim_locale: Locale (i.e. language and country)
+  claim_updated_at: Time your information was last updated
+  claim_email: E-mail address
+  claim_email_verified: Flag to indicate if your e-mail address has been verified
+  claim_phone_number: Telephone number
+  claim_phone_number_verified: Flag to indicate if your telephone number has been verified
+  claim_address: Postal address
+
+de:
+  site_title: "SSO"
+  login_title: "Anmeldung"
+  login_username_label: "Anmeldename"
+  login_password_label: "Kennwort"
+  login_totp_label: "Zeitlich limitiertes Einmalkennwort (TOTP)"
+  login_remember_label: "Angemeldet bleiben"
+  login_cancel: "Abbrechen"
+  login_submit: "Anmelden"
+  login_bad_credentials: "Anmeldung fehlgeschlagen; Deine Anmeldedaten waren falsch."
+  consent_title: "Einverständnis"
+  consent_access_account: "möchte auf Dein Konto zugreifen"
+  consent_permissions_header: "Die oben genannte Anwendung möchte für folgende Zugriffe berechtigt werden."
+  consent_review_header: "Wähle <b>Zugriff erlauben</b>, wenn Du mit diesen Zugriffen einverstanden bist."
+  consent_remember_label: "Einverständnis merken"
+  consent_permissions_footer: "Dein Einverständnis ist für diesen Zugriff erforderlich. Wenn Du nicht einverstanden bist, dann wähle <b>Zugriff verweigern</b>, um zu verhindern, dass die Anwendung Zugriff auf Deine Daten erhält."
+  consent_cancel: "Zugriff verweigern"
+  consent_submit: "Zugriff erlauben"
+  logout_title: "Abmeldung"
+  logout_account_label: "Konto"
+  logout_description: "Du bist dabei Dich von Deinem Identitätsanbieter abzumelden."
+  logout_explanation: "Obwohl dieser Vorgang Dich auch aus allen verknüpften Anwendungen abmelden müsste, solltest Du dies für jede einzelne Anwendung, in der Du dieses Konto verwendet hast, sicherstellen."
+  logout_cancel: "Abbrechen"
+  logout_submit: "Abmelden"
+  s400_title: "400 - Fehlerhafte Anfrage"
+  s400_message: "Der Fehler liegt bei Dir. 🥲"
+  s404_title: "404 - Seite nicht gefunden"
+  s404_message: "Dort geht es nicht weiter. 😵‍💫"
+  s500_title: "500 - Interner Fehler"
+  s500_message: "Ich habe etwas falsch gemacht. Tut mir Leid. 😭"
+  scope_openid: Zugriff auf Deinen Benutzernamen aus der Anmeldung.
+  scope_offline_access: Der App erlauben in Deinem Namen zu handeln, auch wenn Du nicht die App gerade nicht benutzt (oder nicht eingeloggt bist).
+  scope_offline: Der App erlauben in Deinem Namen zu handeln, auch wenn Du nicht die App gerade nicht benutzt (oder nicht eingeloggt bist).
+  scope_profile: Zugriff auf folgende persönliche Profildaten
+  scope_email: Zugriff auf Deine E-Mail-Adresse.
+  scope_address: Zugriff auf Deine Postanschrift.
+  scope_phone: Zugriff auf Deine Telefonnummer.
+  claim_sub: Zugriff auf Deinen Benutzernamen aus der Anmeldung.
+  claim_name: Vollständiger Name, inkl. Titeln und Namenszusätzen.
+  claim_family_name: Nachname
+  claim_given_name: Vorname
+  claim_middle_name: Zwischen- oder Mittelname
+  claim_nickname: Spitzname
+  claim_preferred_username: Ggf. gekürzter Name, so maxmuster oder mmuster
+  claim_profile: URL Deine Profile-Seite
+  claim_picture: URL Deines Profil-Bilds
+  claim_website: URL Deiner Web-Seite oder Blogs
+  claim_gender: Geschlecht
+  claim_birthdate: Geburtstag
+  claim_zoneinfo: Zeitzone
+  claim_locale: Gebietsschema (d.h. Sprache und Land)
+  claim_updated_at: Zeitpunkt der letzten Aktualisierung Deiner Profildaten
+  claim_email: E-Mail-Adresse
+  claim_email_verified: Kennzeichen, ob Deine E-Mail-Adresse verifiziert wurde
+  claim_phone_number: Telefonnummer
+  claim_phone_number_verified: Kennzeichen, ob Deine Telefonnummer verifiziert wurde
+  claim_address: Postanschrift

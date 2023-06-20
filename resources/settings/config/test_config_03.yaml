@@ -1,0 +1,11 @@
+server:
+  port: 28080
+
+csrf:
+  totpTtlSeconds: 3000
+
+hydra:
+  skipTlsVerification: true
+
+ldap:
+  bindPassword: password123

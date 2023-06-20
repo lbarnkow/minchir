@@ -1,0 +1,8 @@
+eins:
+  value: 1
+  present: null
+  is_null: null
+zwei: 2.0
+drei:
+  - "x"
+  - "y"
